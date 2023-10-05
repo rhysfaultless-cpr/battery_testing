@@ -26,6 +26,16 @@ class NumatoRelay(Node):
 
         relay_channel = request.relay_channel # Integer starting from 0, aligned with what physical relay to operate
     
+        # Check if the requested relay_channel is already set to the requested relay_state
+        if self.get_relay_state(relay_channel) == request.relay_state:
+            print('Relay ' + str(relay_channel) + ' is already set to ' + str(relay_state) + ' / ' + str(response.relay_response) )
+        else:
+            self.set_relay_state(relay_channel, relay_state)
+            self.serial_lock.acquire()
+            self.serial_port.write(f"relay {relay_state} {relay_channel}\n\r".encode("utf-8"))
+            self.serial_port.flush()
+            self.serial_lock.release()
+
         return response   
 
     def read_relay(self):
@@ -49,6 +59,9 @@ class NumatoRelay(Node):
         
     def set_relay_state(self, index, content):
         self.relay_state_array.insert(index, content)
+
+    def get_relay_state(self, index):
+        return self.relay_state_array[index]
 
 def main():
     rclpy.init()
