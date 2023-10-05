@@ -35,7 +35,7 @@ After starting the package per the steps in Setup:
     ros2 service call /set_relay numato_relay_interfaces/srv/SetRelay "{relay_channel: 3, relay_state: False}"
     ```
     
-    -   Changing the integer beside `relay_channel:` to match which relay you want to control.
+    -   Changing the integer beside `relay_channel:` to match the relay that you want to control.
     -   Changing the boolean beside `relay_state:` to:
         -  True for closing the relay (_powered_)
         -  False for opening the relay (_unpowered_)
