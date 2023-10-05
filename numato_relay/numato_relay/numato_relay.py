@@ -17,6 +17,7 @@ class NumatoRelay(Node):
         self.serial_port = serial.Serial(self.port, self.baud, timeout=1)
         self.SERIAL_READ_SIZE = 25
         self.serial_lock = Lock()
+        self.relay_state_array = []
         
     def set_relay(self, request, response):
         if (request.relay_state):
@@ -31,10 +32,9 @@ class NumatoRelay(Node):
         self.serial_port.flush()
         self.serial_lock.release()
         return response   
-        
+
     def read_relay(self):
         index_count = 0
-        relay_states = []
         while True:
             self.serial_lock.acquire()
             self.serial_port.write(f"relay read {index_count} \n\r".encode("utf-8"))
@@ -43,14 +43,17 @@ class NumatoRelay(Node):
             self.serial_lock.release()
             if 'on' in response:
                 print('Adding relay ' + str(i) + ' to relay_states as ON')
-                relay_states.append(True)
+                self.set_relay_state(index_count, True)
             elif 'off' in response:
                 print('Adding relay ' + str(index_count) + ' to relay_states as OFF')
-                relay_states.append(False)
+                self.set_relay_state(index_count, False)
             else:
                 print('Relay ' + str(index_count) + ' does not exist. Exiting the read_relay loop.')
                 break
             index_count += 1
+        
+    def set_relay_state(self, index, content):
+        self.relay_state_array.insert(index, content)
 
 def main():
     rclpy.init()
