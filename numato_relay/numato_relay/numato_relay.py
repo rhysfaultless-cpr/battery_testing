@@ -32,10 +32,24 @@ class NumatoRelay(Node):
         self.serial_lock.release()
         return response   
         
+    def read_relay(self):
+        for i in range(8):
+            self.serial_lock.acquire()
+            self.serial_port.write(f"relay read {i} \n\r".encode("utf-8"))
+            response = str(self.serial_port.read(self.SERIAL_READ_SIZE))
+            self.serial_port.flush()
+            self.serial_lock.release()
+            if 'on' in response:
+                print('relay ' + str(i) + ': on')
+            elif 'off' in response:
+                print('relay ' + str(i) + ': off')
+            else:
+                print('relay ' + str(i) + ': does not exist')
 
 def main():
     rclpy.init()
     numato_relay = NumatoRelay()
+    numato_relay.read_relay()
     rclpy.spin(numato_relay)
     rclpy.shutdown()
 
