@@ -1,50 +1,102 @@
 import serial
-#import time
 from threading import Lock
-
 from numato_relay_interfaces.srv import SetRelay
-
 import rclpy
 from rclpy.node import Node
+
 
 class NumatoRelay(Node):
     def __init__(self):
         super().__init__('NumatoRelay')
-        self.service_set_relay_0_on = self.create_service(SetRelay, '/set_relay_0_on', self.set_relay_0_on)
-        self.service_set_relay_0_off = self.create_service(SetRelay, '/set_relay_0_off', self.set_relay_0_off)
-        
+        self.service_set_relay = self.create_service(SetRelay, '/set_relay', self.set_relay)
+
         self.port = '/dev/ttyACM0'
         self.baud = 19200
         self.serial_port = serial.Serial(self.port, self.baud, timeout=1)
         self.SERIAL_READ_SIZE = 25
         self.serial_lock = Lock()
+        self.relay_state_array = []
         
 
-    def set_relay_0_on(self, request, response):
-        if (request.relay_request):
-            self.serial_lock.acquire()
-            self.serial_port.write(f"relay on 0\n\r".encode("utf-8"))
-            self.serial_port.flush()
-            self.serial_lock.release()
-            response.relay_response = True
+    def set_relay(self, request, response):
+        response.relay_response_string = ' '
+        response.relay_response_bool = False
+        if (type(request.relay_state) is bool):     
+            if (type(request.relay_channel) is int):
+                if (not (request.relay_channel < 0) ):
+                    if ( not(request.relay_channel > (self.get_number_of_relays()-1) ) ):
+                        if (not (self.get_relay_state(request.relay_channel) == request.relay_state) ): # Check if the requested relay_channel is already set to the requested relay_state
+                            if (request.relay_state):
+                                relay_state = 'on' # 'on' or 'off' of whether the relay should be Closed or Open ( on = True = Closed = relay powered )
+                                response.relay_response_bool = True
+                                response.relay_response_string = 'Relay has been turned on.'
+                            else:
+                                relay_state = 'off'
+                                response.relay_response_bool = False
+                                response.relay_response_string = 'Relay has been turned off.'
+                            self.change_relay_state(request.relay_channel, request.relay_state)
+                            self.serial_lock.acquire()
+                            self.serial_port.write(f"relay {relay_state} {request.relay_channel}\n\r".encode("utf-8"))
+                            self.serial_port.flush()
+                            self.serial_lock.release()
+                        else:
+                            print('Relay is already set to ' + str(request.relay_state) )
+                            response.relay_response_string = 'Relay is already set to ' + str(request.relay_state)
+                    else:
+                        print('The requested relay_channel is larger than what this Relay PCBA supports')
+                        response.relay_response_string = 'The requested relay_channel is larger than what this Relay PCBA supports'
+                else:
+                    print('The requested relay_channel needs to be a positive Integer')
+                    response.relay_response_string = 'The requested relay_channel needs to be a positive Integer'
+            else:
+                print('The requested relay_channel needs to be an Integer')
+                response.relay_response_string = 'The requested relay_channel needs to be an Integer'
         else:
-            response.relay_response = False
+            print('The requested relay_state needs to be an Bool')
+            response.relay_response_string = 'The requested relay_state needs to be an Bool'
         return response
 
-    def set_relay_0_off(self, request, response):
-        if (request.relay_request):
+
+    def read_relay(self):
+        index_count = 0
+        while True:
             self.serial_lock.acquire()
-            self.serial_port.write(f"relay off 0\n\r".encode("utf-8"))
+            self.serial_port.write(f"relay read {index_count} \n\r".encode("utf-8"))
+            response = str(self.serial_port.read(self.SERIAL_READ_SIZE))
             self.serial_port.flush()
             self.serial_lock.release()
-            response.relay_response = True
-        else:
-            response.relay_response = False
-        return response
+            if 'on' in response:
+                print('Adding relay ' + str(index_count) + ' to relay_states as ON')
+                self.set_relay_state(index_count, True)
+            elif 'off' in response:
+                print('Adding relay ' + str(index_count) + ' to relay_states as OFF')
+                self.set_relay_state(index_count, False)
+            else:
+                print('Relay ' + str(index_count) + ' does not exist. Exiting the read_relay loop.')
+                break
+            index_count += 1
+
+
+    def change_relay_state(self, index, content):
+        self.relay_state_array[index] = content
+
+
+    def set_relay_state(self, index, content):
+        self.relay_state_array.insert(index, content)
+
+
+    def get_relay_state(self, index):
+        return self.relay_state_array[index]
+
+
+    def get_number_of_relays(self):
+        return len(self.relay_state_array)
+
 
 def main():
     rclpy.init()
     numato_relay = NumatoRelay()
+    numato_relay.read_relay()
     rclpy.spin(numato_relay)
     rclpy.shutdown()
 
