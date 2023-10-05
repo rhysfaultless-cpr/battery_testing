@@ -51,7 +51,7 @@ ros2 run numato_relay service
 
 Terminal B:
 ```
-ros2 service call /set_relay_0_on numato_relay_interfaces/srv/SetRelay "{request: True}"
+ros2 service call /set_relay numato_relay_interfaces/srv/SetRelay "{relay_channel: 2, relay_state: True}"
 ```
 
 - was getting an error, that was resolved by running 

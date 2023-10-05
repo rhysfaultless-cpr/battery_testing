@@ -1,3 +1,4 @@
-bool relay_request
+int64 relay_channel
+bool relay_state
 ---
 bool relay_response
