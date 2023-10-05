@@ -59,7 +59,12 @@ class NumatoRelay(Node):
                 print('Relay ' + str(index_count) + ' does not exist. Exiting the read_relay loop.')
                 break
             index_count += 1
-        
+
+
+    def change_relay_state(self, index, content):
+        self.relay_state_array[index] = content
+
+
     def set_relay_state(self, index, content):
         self.relay_state_array.insert(index, content)
 
