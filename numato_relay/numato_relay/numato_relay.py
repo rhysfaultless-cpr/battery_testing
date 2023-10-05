@@ -4,6 +4,7 @@ from numato_relay_interfaces.srv import SetRelay
 import rclpy
 from rclpy.node import Node
 
+
 class NumatoRelay(Node):
     def __init__(self):
         super().__init__('NumatoRelay')
@@ -16,6 +17,7 @@ class NumatoRelay(Node):
         self.serial_lock = Lock()
         self.relay_state_array = []
         
+
     def set_relay(self, request, response):
         if (request.relay_state):
             relay_state = 'on' # 'on' or 'off' of whether the relay should be Closed or Open ( on = True = Closed = relay powered )
@@ -37,6 +39,7 @@ class NumatoRelay(Node):
             self.serial_lock.release()
 
         return response   
+
 
     def read_relay(self):
         index_count = 0
@@ -60,8 +63,10 @@ class NumatoRelay(Node):
     def set_relay_state(self, index, content):
         self.relay_state_array.insert(index, content)
 
+
     def get_relay_state(self, index):
         return self.relay_state_array[index]
+
 
 def main():
     rclpy.init()
