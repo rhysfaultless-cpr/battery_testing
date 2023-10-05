@@ -68,6 +68,10 @@ class NumatoRelay(Node):
         return self.relay_state_array[index]
 
 
+    def get_number_of_relays(self):
+        return len(self.relay_state_array)
+
+
 def main():
     rclpy.init()
     numato_relay = NumatoRelay()
