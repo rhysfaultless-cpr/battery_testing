@@ -50,7 +50,7 @@ After starting the package per the steps in Setup:
 <br />
 
 ## Details of the changes
-I started from ROS 1 repository [https://github.com/clearpathrobotics/numato_relay_interface].
+I started from ROS 1 repository https://github.com/clearpathrobotics/numato_relay_interface .
 
 I needed to make changes related to:
 -   New structure for Services in ROS 2
