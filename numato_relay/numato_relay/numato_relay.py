@@ -39,7 +39,7 @@ class NumatoRelay(Node):
             self.serial_port.flush()
             self.serial_lock.release()
             if 'on' in response:
-                print('Adding relay ' + str(i) + ' to relay_states as ON')
+                print('Adding relay ' + str(index_count) + ' to relay_states as ON')
                 self.set_relay_state(index_count, True)
             elif 'off' in response:
                 print('Adding relay ' + str(index_count) + ' to relay_states as OFF')
