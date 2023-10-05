@@ -33,18 +33,24 @@ class NumatoRelay(Node):
         return response   
         
     def read_relay(self):
-        for i in range(8):
+        index_count = 0
+        relay_states = []
+        while True:
             self.serial_lock.acquire()
-            self.serial_port.write(f"relay read {i} \n\r".encode("utf-8"))
+            self.serial_port.write(f"relay read {index_count} \n\r".encode("utf-8"))
             response = str(self.serial_port.read(self.SERIAL_READ_SIZE))
             self.serial_port.flush()
             self.serial_lock.release()
             if 'on' in response:
-                print('relay ' + str(i) + ': on')
+                print('Adding relay ' + str(i) + ' to relay_states as ON')
+                relay_states.append(True)
             elif 'off' in response:
-                print('relay ' + str(i) + ': off')
+                print('Adding relay ' + str(index_count) + ' to relay_states as OFF')
+                relay_states.append(False)
             else:
-                print('relay ' + str(i) + ': does not exist')
+                print('Relay ' + str(index_count) + ' does not exist. Exiting the read_relay loop.')
+                break
+            index_count += 1
 
 def main():
     rclpy.init()
