@@ -23,11 +23,9 @@ class NumatoRelay(Node):
         else:
             relay_state = 'off'
             response.relay_response = False
-        relay_channel = request.relay_channel # Integer from 0 - 7, aligned with what physical relay to operate
-        self.serial_lock.acquire()
-        self.serial_port.write(f"relay {relay_state} {relay_channel}\n\r".encode("utf-8"))
-        self.serial_port.flush()
-        self.serial_lock.release()
+
+        relay_channel = request.relay_channel # Integer starting from 0, aligned with what physical relay to operate
+    
         return response   
 
     def read_relay(self):
