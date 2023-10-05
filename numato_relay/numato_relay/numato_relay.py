@@ -1,9 +1,6 @@
 import serial
-#import time
 from threading import Lock
-
 from numato_relay_interfaces.srv import SetRelay
-
 import rclpy
 from rclpy.node import Node
 
