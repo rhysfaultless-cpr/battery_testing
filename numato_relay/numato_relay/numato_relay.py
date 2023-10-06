@@ -13,7 +13,6 @@ class NumatoRelay(Node):
         self.publisher_ = self.create_publisher(String, '/numato_relay_state', 10)
         timer_period = 1  # seconds
         self.timer = self.create_timer(timer_period, self.timer_callback)
-        self.timer_index = 0
 
         self.port = '/dev/ttyACM0'
         self.baud = 19200
@@ -106,7 +105,6 @@ class NumatoRelay(Node):
         msg.data = data_for_message
         self.publisher_.publish(msg)
         self.get_logger().info('Publishing: "%s"' % msg.data)
-        self.timer_index += 1
 
 
 def main():
