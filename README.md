@@ -42,6 +42,30 @@ After starting the package per the steps in Setup:
 
 <br />
 
+## Topics
+
+A topic is created for each available relay.
+`numato_relay.py` structures 8 publishers, but only publishes the ones that are supported on the connected Numato PCBA.
+So, with a 4 channel PCBA, only topics 0 - 3 will be published.
+
+Each topic publishes a boolean:
+-   True = on = relay closed = relay powered
+-   False = off = relay open = relay not powered
+
+<br /> 
+
+The topic names are:
+-   `/numato_relay_state_0`
+-   `/numato_relay_state_1`
+-   `/numato_relay_state_2`
+-   `/numato_relay_state_3`
+-   `/numato_relay_state_4`
+-   `/numato_relay_state_5`
+-   `/numato_relay_state_6`
+-   `/numato_relay_state_7`
+
+<br />
+
 ## Hardware details
 -   /dev/ttyACM0
     -   `sudo chmod 777 /dev/ttyACM0`
