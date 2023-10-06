@@ -3,12 +3,17 @@ from threading import Lock
 from numato_relay_interfaces.srv import SetRelay
 import rclpy
 from rclpy.node import Node
+from std_msgs.msg import String
 
 
 class NumatoRelay(Node):
     def __init__(self):
         super().__init__('NumatoRelay')
         self.service_set_relay = self.create_service(SetRelay, '/set_relay', self.set_relay)
+        self.publisher_ = self.create_publisher(String, '/numato_relay_state', 10)
+        timer_period = 1  # seconds
+        self.timer = self.create_timer(timer_period, self.timer_callback)
+        self.timer_index = 0
 
         self.port = '/dev/ttyACM0'
         self.baud = 19200
@@ -91,6 +96,17 @@ class NumatoRelay(Node):
 
     def get_number_of_relays(self):
         return len(self.relay_state_array)
+    
+    def timer_callback(self):
+        msg = String()
+        data_for_message = 'Numato relay states: \n\r'
+        for relay_index in range(self.get_number_of_relays()):
+            data_for_message += ('  Relay ' + str(relay_index) + "'s state: " + str(self.get_relay_state(relay_index)) + ' \n\r')
+        data_for_message += ' \n\r'
+        msg.data = data_for_message
+        self.publisher_.publish(msg)
+        self.get_logger().info('Publishing: "%s"' % msg.data)
+        self.timer_index += 1
 
 
 def main():
