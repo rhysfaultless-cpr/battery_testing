@@ -19,7 +19,6 @@ class NumatoRelay(Node):
         self.SERIAL_READ_SIZE = 25
         self.serial_lock = Lock()
         self.relay_state_array = []
-
         self.publisher_0 = None
         self.publisher_1 = None
         self.publisher_2 = None
@@ -52,19 +51,14 @@ class NumatoRelay(Node):
                             self.serial_port.flush()
                             self.serial_lock.release()
                         else:
-                            print('Relay is already set to ' + str(request.relay_state) )
                             response.relay_response_string = 'Relay is already set to ' + str(request.relay_state)
                     else:
-                        print('The requested relay_channel is larger than what this Relay PCBA supports')
                         response.relay_response_string = 'The requested relay_channel is larger than what this Relay PCBA supports'
                 else:
-                    print('The requested relay_channel needs to be a positive Integer')
                     response.relay_response_string = 'The requested relay_channel needs to be a positive Integer'
             else:
-                print('The requested relay_channel needs to be an Integer')
                 response.relay_response_string = 'The requested relay_channel needs to be an Integer'
         else:
-            print('The requested relay_state needs to be an Bool')
             response.relay_response_string = 'The requested relay_state needs to be an Bool'
         return response
 
@@ -78,13 +72,10 @@ class NumatoRelay(Node):
             self.serial_port.flush()
             self.serial_lock.release()
             if 'on' in response:
-                print('Adding relay ' + str(index_count) + ' to relay_states as ON')
                 self.set_relay_state(index_count, True)
             elif 'off' in response:
-                print('Adding relay ' + str(index_count) + ' to relay_states as OFF')
                 self.set_relay_state(index_count, False)
             else:
-                print('Relay ' + str(index_count) + ' does not exist. Exiting the read_relay loop.')
                 break
             index_count += 1
 
@@ -109,28 +100,21 @@ class NumatoRelay(Node):
         number_of_relays = self.get_number_of_relays()
         if ( number_of_relays > 0 ):
             self.publisher_0 = self.create_publisher(Bool, '/numato_relay_state_0', 10)
-            print('Updated publisher for relay 0')
         if ( number_of_relays > 1 ):
             self.publisher_1 = self.create_publisher(Bool, '/numato_relay_state_1', 10)
-            print('Updated publisher for relay 1')
         if ( number_of_relays > 2 ):
             self.publisher_2 = self.create_publisher(Bool, '/numato_relay_state_2', 10)
-            print('Updated publisher for relay 2')
         if ( number_of_relays > 3 ):
             self.publisher_3 = self.create_publisher(Bool, '/numato_relay_state_3', 10)
-            print('Updated publisher for relay 3')
         if ( number_of_relays > 4 ):
             self.publisher_4 = self.create_publisher(Bool, '/numato_relay_state_4', 10)
-            print('Updated publisher for relay 4')
         if ( number_of_relays > 5 ):
             self.publisher_5 = self.create_publisher(Bool, '/numato_relay_state_5', 10)
-            print('Updated publisher for relay 5')
         if ( number_of_relays > 6 ):
             self.publisher_6 = self.create_publisher(Bool, '/numato_relay_state_6', 10)
-            print('Updated publisher for relay 6')
         if ( number_of_relays > 7 ):
             self.publisher_7 = self.create_publisher(Bool, '/numato_relay_state_7', 10)
-            print('Updated publisher for relay 7')
+
 
     def timer_callback(self):
         if ( not(self.publisher_0 == None) ):
