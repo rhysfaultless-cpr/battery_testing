@@ -1,4 +1,4 @@
-int64 relay_channel
+uint8 relay_channel
 bool relay_state
 ---
 bool relay_response_bool
