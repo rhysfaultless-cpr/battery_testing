@@ -42,7 +42,7 @@ After starting the package per the steps in Setup:
 
 <br />
 
-## Topics
+## Relay Topics
 
 A topic is created for each available relay.
 `numato_relay.py` structures 8 publishers, but only publishes the ones that are supported on the connected Numato PCBA.
@@ -63,6 +63,29 @@ The topic names are:
 -   `/numato_relay_state_5`
 -   `/numato_relay_state_6`
 -   `/numato_relay_state_7`
+
+<br />
+
+## Using the GPIO headers
+
+Number of GPIO channels available on the different Numato PCBA's: 
+| Relay PCBA | Smallest GPIO channel | Largest GPIO channel |
+| :--------- | :-------------------- | :------------------- |
+| 2 channel  | IO 0                  | IO 8                 |
+| 4 channel  | IO 0                  | IO 5                 |
+| 8 channel  | Not available         | Not available        |
+| 64 channel | IO 0                  | IO 7                 |
+
+All of these channels operate at 5 VDC for reading and writing/setting.
+<br />
+
+Serial messages for controlling the GPIO channels:
+- gpio set 0
+- gpio clear 0
+- gpio read 0
+
+Note that the GPIO read is inconsistent with a direct 5 V connection through a button.
+The response time is significantly improved by using a pull-up resistor always connected to the GPIO channel, and then using a button to ground the circuit.
 
 <br />
 
@@ -137,3 +160,13 @@ From running `dmesg`:
 5.  https://www.youtube.com/watch?v=E_xBPI8SQig
     -   https://roboticsbackend.com/ros2-create-custom-message/
 6.  https://numato.com/docs/4-channel-usb-relay-module/#the-command-set-9
+7.  https://docs.ros.org/en/foxy/Tutorials/Intermediate/Launch/Launch-system.html
+    - https://get-help.robotigniteacademy.com/t/executable-not-found-on-the-libexec-directory-when-trying-to-launch/21326
+    - https://docs.ros.org/en/iron/p/rclpy/api/init_shutdown.html#rclpy.shutdown
+
+## Further development tasks todo:
+
+- Consider adding services for GPIO read and write.
+- Move the .srv file to the main package. This would eliminate the directory `numato_relay_interfaces`.
+- Consider rewriting this package in C++. This would make the service and serial calls faster.
+- Later, consider moving the .srv to clearpath_common.

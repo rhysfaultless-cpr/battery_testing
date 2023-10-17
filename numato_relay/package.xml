@@ -3,9 +3,9 @@
 <package format="3">
   <name>numato_relay</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
+  <description>Numato relay driver</description>
   <maintainer email="rfaultless@clearpathrobotics.com">Rhys Faultless</maintainer>
-  <license>TODO: License declaration</license>
+  <license>BSD</license>
 
   <depend>rclpy</depend>
   <depend>numato_relay_interfaces</depend>
