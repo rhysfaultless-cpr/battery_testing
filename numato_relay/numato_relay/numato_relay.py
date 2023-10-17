@@ -10,8 +10,10 @@ class NumatoRelay(Node):
     def __init__(self):
         super().__init__('NumatoRelay')
         self.service_set_relay = self.create_service(SetRelay, '/set_relay', self.set_relay)
-        timer_period = 1  # seconds
-        self.timer = self.create_timer(timer_period, self.timer_callback)
+        relay_timer_period = 1.0  # seconds
+        gpio_timer_period = 3.0  # seconds
+        self.relay_timer = self.create_timer(relay_timer_period, self.relay_timer_callback)
+        self.gpio_timer = self.create_timer(gpio_timer_period, self.gpio_timer_callback)
         self.port = '/dev/ttyACM0'
         self.baud = 19200
         self.serial_port = serial.Serial(self.port, self.baud, timeout=1)
@@ -143,6 +145,7 @@ class NumatoRelay(Node):
                 break
             index_count += 1
 
+
     def update_gpio(self):
         for index_count in range(self.get_number_of_gpio()):
             self.serial_lock.acquire()
@@ -195,7 +198,7 @@ class NumatoRelay(Node):
             self.gpio_publisher_7 = self.create_publisher(Bool, '/numato_gpio_state_7', 10)
 
 
-    def timer_callback(self):
+    def relay_timer_callback(self):
         if ( not(self.relay_publisher_0 == None) ):
             msg_0 = Bool()
             msg_0.data = self.get_relay_state(0)
@@ -244,6 +247,8 @@ class NumatoRelay(Node):
             self.relay_publisher_7.publish(msg_7)
             self.get_logger().info('Publishing relay 7: "%s"' % msg_7.data)
 
+
+    def gpio_timer_callback(self):
         self.update_gpio()
 
         if ( not(self.gpio_publisher_0 == None) ):
