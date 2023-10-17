@@ -172,6 +172,7 @@ def main():
     numato_relay.read_relay()
     numato_relay.update_relay_publishers()
     rclpy.spin(numato_relay)
+    numato_relay.destroy_node()
     rclpy.shutdown()
 
 

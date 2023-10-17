@@ -160,6 +160,9 @@ From running `dmesg`:
 5.  https://www.youtube.com/watch?v=E_xBPI8SQig
     -   https://roboticsbackend.com/ros2-create-custom-message/
 6.  https://numato.com/docs/4-channel-usb-relay-module/#the-command-set-9
+7.  https://docs.ros.org/en/foxy/Tutorials/Intermediate/Launch/Launch-system.html
+    - https://get-help.robotigniteacademy.com/t/executable-not-found-on-the-libexec-directory-when-trying-to-launch/21326
+    - https://docs.ros.org/en/iron/p/rclpy/api/init_shutdown.html#rclpy.shutdown
 
 ## Further development tasks todo:
 
