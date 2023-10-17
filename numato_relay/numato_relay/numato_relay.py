@@ -19,14 +19,14 @@ class NumatoRelay(Node):
         self.SERIAL_READ_SIZE = 25
         self.serial_lock = Lock()
         self.relay_state_array = []
-        self.publisher_0 = None
-        self.publisher_1 = None
-        self.publisher_2 = None
-        self.publisher_3 = None
-        self.publisher_4 = None
-        self.publisher_5 = None
-        self.publisher_6 = None
-        self.publisher_7 = None
+        self.relay_publisher_0 = None
+        self.relay_publisher_1 = None
+        self.relay_publisher_2 = None
+        self.relay_publisher_3 = None
+        self.relay_publisher_4 = None
+        self.relay_publisher_5 = None
+        self.relay_publisher_6 = None
+        self.relay_publisher_7 = None
         
 
     def set_relay(self, request, response):
@@ -99,70 +99,70 @@ class NumatoRelay(Node):
     def update_relay_publishers(self):
         number_of_relays = self.get_number_of_relays()
         if ( number_of_relays > 0 ):
-            self.publisher_0 = self.create_publisher(Bool, '/numato_relay_state_0', 10)
+            self.relay_publisher_0 = self.create_publisher(Bool, '/numato_relay_state_0', 10)
         if ( number_of_relays > 1 ):
-            self.publisher_1 = self.create_publisher(Bool, '/numato_relay_state_1', 10)
+            self.relay_publisher_1 = self.create_publisher(Bool, '/numato_relay_state_1', 10)
         if ( number_of_relays > 2 ):
-            self.publisher_2 = self.create_publisher(Bool, '/numato_relay_state_2', 10)
+            self.relay_publisher_2 = self.create_publisher(Bool, '/numato_relay_state_2', 10)
         if ( number_of_relays > 3 ):
-            self.publisher_3 = self.create_publisher(Bool, '/numato_relay_state_3', 10)
+            self.relay_publisher_3 = self.create_publisher(Bool, '/numato_relay_state_3', 10)
         if ( number_of_relays > 4 ):
-            self.publisher_4 = self.create_publisher(Bool, '/numato_relay_state_4', 10)
+            self.relay_publisher_4 = self.create_publisher(Bool, '/numato_relay_state_4', 10)
         if ( number_of_relays > 5 ):
-            self.publisher_5 = self.create_publisher(Bool, '/numato_relay_state_5', 10)
+            self.relay_publisher_5 = self.create_publisher(Bool, '/numato_relay_state_5', 10)
         if ( number_of_relays > 6 ):
-            self.publisher_6 = self.create_publisher(Bool, '/numato_relay_state_6', 10)
+            self.relay_publisher_6 = self.create_publisher(Bool, '/numato_relay_state_6', 10)
         if ( number_of_relays > 7 ):
-            self.publisher_7 = self.create_publisher(Bool, '/numato_relay_state_7', 10)
+            self.relay_publisher_7 = self.create_publisher(Bool, '/numato_relay_state_7', 10)
 
 
     def timer_callback(self):
-        if ( not(self.publisher_0 == None) ):
+        if ( not(self.relay_publisher_0 == None) ):
             msg_0 = Bool()
             msg_0.data = self.get_relay_state(0)
-            self.publisher_0.publish(msg_0)
+            self.relay_publisher_0.publish(msg_0)
             self.get_logger().info('Publishing relay 0: "%s"' % msg_0.data)
 
-        if ( not(self.publisher_1 == None) ):
+        if ( not(self.relay_publisher_1 == None) ):
             msg_1 = Bool()
             msg_1.data = self.get_relay_state(1)
-            self.publisher_1.publish(msg_1)
+            self.relay_publisher_1.publish(msg_1)
             self.get_logger().info('Publishing relay 1: "%s"' % msg_1.data)
 
-        if ( not(self.publisher_2 == None) ):
+        if ( not(self.relay_publisher_2 == None) ):
             msg_2 = Bool()
             msg_2.data = self.get_relay_state(2)
-            self.publisher_2.publish(msg_2)
+            self.relay_publisher_2.publish(msg_2)
             self.get_logger().info('Publishing relay 2: "%s"' % msg_2.data)
 
-        if ( not(self.publisher_3 == None) ):
+        if ( not(self.relay_publisher_3 == None) ):
             msg_3 = Bool()
             msg_3.data = self.get_relay_state(3)
-            self.publisher_3.publish(msg_3)
+            self.relay_publisher_3.publish(msg_3)
             self.get_logger().info('Publishing relay 3: "%s"' % msg_3.data)
 
-        if ( not(self.publisher_4 == None) ):
+        if ( not(self.relay_publisher_4 == None) ):
             msg_4 = Bool()
             msg_4.data = self.get_relay_state(4)
-            self.publisher_4.publish(msg_4)
+            self.relay_publisher_4.publish(msg_4)
             self.get_logger().info('Publishing relay 4: "%s"' % msg_4.data)
 
-        if ( not(self.publisher_5 == None) ):
+        if ( not(self.relay_publisher_5 == None) ):
             msg_5 = Bool()
             msg_5.data = self.get_relay_state(5)
-            self.publisher_5.publish(msg_5)
+            self.relay_publisher_5.publish(msg_5)
             self.get_logger().info('Publishing relay 5: "%s"' % msg_5.data)
 
-        if ( not(self.publisher_6 == None) ):
+        if ( not(self.relay_publisher_6 == None) ):
             msg_6 = Bool()
             msg_6.data = self.get_relay_state(6)
-            self.publisher_6.publish(msg_6)
+            self.relay_publisher_6.publish(msg_6)
             self.get_logger().info('Publishing relay 6: "%s"' % msg_6.data)
 
-        if ( not(self.publisher_7 == None) ):
+        if ( not(self.relay_publisher_7 == None) ):
             msg_7 = Bool()
             msg_7.data = self.get_relay_state(7)
-            self.publisher_7.publish(msg_7)
+            self.relay_publisher_7.publish(msg_7)
             self.get_logger().info('Publishing relay 7: "%s"' % msg_7.data)
 
 
