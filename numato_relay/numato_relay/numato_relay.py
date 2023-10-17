@@ -96,7 +96,7 @@ class NumatoRelay(Node):
         return len(self.relay_state_array)
     
 
-    def update_publishers(self):
+    def update_relay_publishers(self):
         number_of_relays = self.get_number_of_relays()
         if ( number_of_relays > 0 ):
             self.publisher_0 = self.create_publisher(Bool, '/numato_relay_state_0', 10)
@@ -170,7 +170,7 @@ def main():
     rclpy.init()
     numato_relay = NumatoRelay()
     numato_relay.read_relay()
-    numato_relay.update_publishers()
+    numato_relay.update_relay_publishers()
     rclpy.spin(numato_relay)
     rclpy.shutdown()
 
