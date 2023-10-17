@@ -143,6 +143,21 @@ class NumatoRelay(Node):
                 break
             index_count += 1
 
+    def update_gpio(self):
+        for index_count in range(self.get_number_of_gpio()):
+            self.serial_lock.acquire()
+            self.serial_port.write(f"gpio read {index_count} \n\r".encode("utf-8"))
+            response = str(self.serial_port.read(self.SERIAL_READ_SIZE))
+            self.serial_port.flush()
+            self.serial_lock.release()
+            response = response.lstrip(response[0:13])
+            if '1' in response:
+                self.set_gpio_state(index_count, True)
+            elif '0' in response:
+                self.set_gpio_state(index_count, False)
+            else:
+                break
+
 
     def change_gpio_state(self, index, content):
         self.gpio_state_array[index] = content
@@ -229,7 +244,7 @@ class NumatoRelay(Node):
             self.relay_publisher_7.publish(msg_7)
             self.get_logger().info('Publishing relay 7: "%s"' % msg_7.data)
 
-        self.read_gpio()
+        self.update_gpio()
 
         if ( not(self.gpio_publisher_0 == None) ):
             gpio_msg_0 = Bool()
