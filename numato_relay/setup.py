@@ -18,8 +18,8 @@ setup(
     zip_safe=True,
     maintainer='administrator',
     maintainer_email='rfaultless@clearpathrobotics.com',
-    description='TODO: Package description',
-    license='TODO: License declaration',
+    description='Driver for controlling Numato Labs USB relay PCBAs',
+    license='BSD',
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
